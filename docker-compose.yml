@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  # Python app service
+  app:
+    image: mytask:latest
+    deploy:
+      replicas: 2  # Set to 2 replicas for high availability
+      update_config:
+        parallelism: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - app_network
+    expose:
+      - "8000"  # Expose port 8000 to the internal network
+
+  # NGINX reverse proxy service
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Load custom NGINX configuration
+    ports:
+      - "80:80"  # Expose port 80 for external access
+    networks:
+      - app_network
+    depends_on:
+      - app
+
+networks:
+  app_network:
+    driver: bridge
