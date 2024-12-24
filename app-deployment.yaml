@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mytask
+spec:
+  replicas: 2  # Number of replicas for high availability
+  selector:
+    matchLabels:
+      app: mytask
+  template:
+    metadata:
+      labels:
+        app: mytask
+    spec:
+      containers:
+      - name: mytask
+        image: mytask:latest  # Replace with your container image name
+        ports:
+        - containerPort: 8000
+
